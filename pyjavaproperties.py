@@ -322,10 +322,10 @@ if __name__ == "__main__":
     p = Properties()
     p.load(open('test2.properties'))
     p.list()
-    print p
-    print p.items()
-    print p['name3']
+    print(p)
+    print(p.items())
+    print(p['name3'])
     p['name3'] = 'changed = value'
-    print p['name3']
+    print(p['name3'])
     p['new key'] = 'new value'
     p.store(open('test2.properties', 'w'))
