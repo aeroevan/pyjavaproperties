@@ -7,8 +7,8 @@ This is modelled as closely as possible to the Java original.
 Created - Anand B Pillai <abpillai@gmail.com>
 """
 
-import sys
 import re
+import sys
 import time
 
 
@@ -102,7 +102,6 @@ class Properties(object):
             # Skip lines which are comments
             if line[0] in ('#', '!'):
                 continue
-            # Some flags
             # Position of first separation char
             sepidx = -1
             # Check for valid space separation
@@ -145,7 +144,7 @@ class Properties(object):
             # same property
             while line[-1] == '\\':
                 # Read next line
-                nextline = i.next()
+                nextline = next(i)
                 nextline = nextline.strip()
                 lineno += 1
                 # This line will become part of the value
@@ -194,13 +193,13 @@ class Properties(object):
 
         for f in found:
             srcKey = f[1:-1]
-            if self._props.has_key(srcKey):
+            if srcKey in self._props:
                 value = value.replace(f, self._props[srcKey], 1)
 
         self._props[key] = value.strip()
 
         # Check if an entry exists in pristine keys
-        if self._keymap.has_key(key):
+        if key in self._keymap:
             oldkey = self._keymap.get(key)
             self._origprops[oldkey] = oldvalue.strip()
         else:
@@ -233,11 +232,11 @@ class Properties(object):
         """ Load properties from an open file stream """
 
         # For the time being only accept file input streams
-        if type(stream) is not file:
-            raise TypeError, 'Argument should be a file object!'
+        if not (hasattr(stream, 'readlines') and hasattr(stream, 'mode')):
+            raise TypeError('Argument should be a file object!')
         # Check for the opened mode
         if stream.mode != 'r':
-            raise ValueError, 'Stream should be opened in read-only mode!'
+            raise ValueError('Stream should be opened in read-only mode!')
 
         try:
             lines = stream.readlines()
@@ -256,7 +255,7 @@ class Properties(object):
         if type(key) is str and type(value) is str:
             self.processPair(key, value)
         else:
-            raise TypeError, 'both key and value should be strings!'
+            raise TypeError('both key and value should be strings!')
 
     def propertyNames(self):
         """ Return an iterator over all the keys of the property
@@ -277,7 +276,7 @@ class Properties(object):
         with the optional 'header' """
 
         if out.mode[0] != 'w':
-            raise ValueError, 'Steam should be opened in write mode!'
+            raise ValueError('Steam should be opened in write mode!')
 
         try:
             out.write(''.join(('#', header, '\n')))
@@ -288,7 +287,7 @@ class Properties(object):
             for prop in self._keyorder:
                 if prop in self._origprops:
                     val = self._origprops[prop]
-                    out.write(''.join((prop, '=', self.escape(val), '\n')))
+                    out.write(''.join((prop.replace('\\ ', ' ').replace(' ', '\\ '), '=', self.escape(val), '\n')))
 
             out.close()
         except IOError:
