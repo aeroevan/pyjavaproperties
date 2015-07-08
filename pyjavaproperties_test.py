@@ -21,7 +21,7 @@ class PyJavaPropertiesTest(unittest.TestCase):
   def testParsePropertiesInput(self):
     properties = Properties()
     properties.load(open(self.properties_file))
-    self.assertEqual(23, len(properties.items()))
+    self.assertEqual(24, len(properties.items()))
     self.assertEqual('Value00', properties['Key00'])
     self.assertEqual('Value01', properties['Key01'])
     self.assertEqual('Value02', properties['Key02'])
@@ -49,6 +49,7 @@ class PyJavaPropertiesTest(unittest.TestCase):
     self.assertEqual('Value20', properties['Key20=WithEquals'])
     self.assertEqual('Value21', properties['Key21:WithColon'])
     self.assertEqual('Value22', properties['Key22'])
+    self.assertEqual('me@abc.com', properties['Key23'])
 
 if __name__ == '__main__':
   unittest.main()
